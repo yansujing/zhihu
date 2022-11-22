@@ -2,30 +2,24 @@
   <GlobalHeader :user-info="userProp"/>
   <div class="container">
     <!-- Content here -->
-    <!-- <ColumnList :list="propList"/> -->
-    <ValidateForm @form-submit="onformSubmit(val)">
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-        <ValidateInput :rules="validateRule" v-model="inputVal" type="text" placeholder="请输入邮箱"/>
-      </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-        <ValidateInput :rules="validateRule" type="password" placeholder="请输入密码"/>
-      </div>
-      <template #btn>
-        <button type="button" class="btn btn-primary">提交</button>
-      </template>
-    </ValidateForm>
+    <ColumnList :list="propList"/>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" v-model.trim="formData.val" @blur="emailBlur"/>
+      <div v-if="formData.error">{{formData.message}}</div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { ColumnProps } from './components/ColumnList.vue'
+import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { Iuser } from './components/GlobalHeader.vue'
-import ValidateForm from './components/ValidateForm.vue'
-import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
 const userProp:Iuser = {
   isLogin: true,
   name: '严素静'
@@ -49,20 +43,27 @@ const propList:ColumnProps[] = [{
 export default defineComponent({
   name: 'App',
   components: {
-    GlobalHeader, ValidateForm, ValidateInput
+    ColumnList, GlobalHeader
   },
   setup () {
-    const validateRule = reactive<RulesProp>([{ type: 'required', message: '请输入邮箱' }, { type: 'email', message: '请输入正确的邮箱' }])
-    const inputVal = ref('ysj')
-    const onformSubmit = () => {
-      console.log('提交成功')
+    const formData = reactive({
+      val: '',
+      message: '',
+      error: false
+    })
+    const emailBlur = function () {
+      if (formData.val === '') {
+        formData.error = true
+        formData.message = '请输入邮箱'
+      } else {
+        formData.error = false
+      }
     }
     return {
       propList,
       userProp,
-      validateRule,
-      inputVal,
-      onformSubmit
+      formData,
+      emailBlur
     }
   }
 })

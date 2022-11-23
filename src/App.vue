@@ -3,14 +3,14 @@
   <div class="container">
     <!-- Content here -->
     <!-- <ColumnList :list="propList"/> -->
-    <ValidateForm @form-submit="onformSubmit(val)">
+    <ValidateForm @form-submit="onformSubmit">
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Email address</label>
         <ValidateInput :rules="validateRule" v-model="inputVal" type="text" placeholder="请输入邮箱"/>
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Email address</label>
-        <ValidateInput :rules="validateRule" type="password" placeholder="请输入密码"/>
+        <ValidateInput :rules="validatePasswprdRule" type="password" placeholder="请输入密码"/>
       </div>
       <template #btn>
         <button type="button" class="btn btn-primary">提交</button>
@@ -53,14 +53,16 @@ export default defineComponent({
   },
   setup () {
     const validateRule = reactive<RulesProp>([{ type: 'required', message: '请输入邮箱' }, { type: 'email', message: '请输入正确的邮箱' }])
-    const inputVal = ref('ysj')
-    const onformSubmit = () => {
-      console.log('提交成功')
+    const validatePasswprdRule = reactive<RulesProp>([{ type: 'required', message: '请输入密码' }])
+    const inputVal = ref('')
+    const onformSubmit = (val:boolean) => {
+      console.log('提交成功', val)
     }
     return {
       propList,
       userProp,
       validateRule,
+      validatePasswprdRule,
       inputVal,
       onformSubmit
     }

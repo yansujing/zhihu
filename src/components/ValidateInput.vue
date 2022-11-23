@@ -7,6 +7,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, reactive } from 'vue'
+import { emitter } from './ValidateForm.vue'
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 interface RuleProp {
   type:'required'|'email';
@@ -26,7 +27,6 @@ export default defineComponent({
       message: ''
     })
     const blurRule = () => {
-      console.log(props)
       if (props.rules) {
         const allPassed = props.rules.every(item => {
           inputRef.message = item.message
@@ -43,9 +43,10 @@ export default defineComponent({
           }
           return ispassed
         })
-        if (!allPassed) {
-          inputRef.error = true
-        }
+        inputRef.error = !allPassed
+        return allPassed
+      } else {
+        return false
       }
     }
     const inputFn = (e:KeyboardEvent) => {
@@ -53,6 +54,7 @@ export default defineComponent({
       inputRef.val = value
       context.emit('update:modelValue', value)
     }
+    emitter.emit('form-item-created', blurRule)
     return {
       inputRef,
       blurRule,

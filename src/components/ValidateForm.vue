@@ -9,16 +9,38 @@
   </form>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onUnmounted } from 'vue'
+import mitt from 'mitt'
+type ValidateFunc = () => boolean
+type Emits<EventType extends string | symbol, T> = {
+  on(type: EventType, handler: (arg: T) => void): void
+  off(type: EventType, handler: (arg: T) => void): void
+  emit(type: EventType, arg: T): void
+}
+type Emitter = Emits<'form-item-created', ValidateFunc>
+export const emitter:Emitter = mitt()
 
 export default defineComponent({
   emits: ['form-submit'],
   setup (props, context) {
+    let funcArr:ValidateFunc[] = []
     const submitForm = () => {
-      context.emit('form-submit', true)
+      const validate = funcArr.map(func => func()).every(item => item)
+      context.emit('form-submit', validate)
     }
+    const onvalidateFn = (func:ValidateFunc) => {
+      funcArr.push(func)
+    }
+    // 添加监听
+    emitter.on('form-item-created', onvalidateFn)
+    onUnmounted(() => {
+      // 删除监听
+      emitter.off('form-item-created', onvalidateFn)
+      funcArr = []
+    })
     return {
-      submitForm
+      submitForm,
+      onvalidateFn
     }
   }
 })

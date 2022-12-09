@@ -6,7 +6,7 @@
         <img :src="column.avatar" class="rounded-circle border border-light w-25 my-3">
         <h5 class="card-title">{{column.title}}</h5>
         <p class="card-text text-left">{{column.description}}</p>
-        <a href="#" class="btn btn-outline-primary">进入专栏</a>
+        <a href="#" class="btn btn-outline-primary" @click.prevent="goDetail(column.id)">进入专栏</a>
       </div>
     </div>
   </div>
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue'
+import { useRouter } from 'vue-router'
 
 export interface ColumnProps {
   id:number;
@@ -40,8 +41,21 @@ export default defineComponent({
         return item
       })
     })
+    const router = useRouter()
+    const goDetail = (id:number) => {
+      // router.push(`/columndetail/${id}`)
+      router.push({
+        name: 'columnDetail',
+        params: {
+          id
+        },
+        query: {
+          ysj: 'ysj'
+        }
+      })
+    }
     return {
-      columnList
+      columnList, goDetail
     }
   }
 })

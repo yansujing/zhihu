@@ -1,7 +1,7 @@
 <template>
   <form>
     <slot name="default"></slot>
-    <div style="background:red" @click.prevent="submitForm">
+    <div @click.prevent="submitForm">
       <slot name="btn">
         <button type="button" class="btn btn-primary">确定</button>
       </slot>

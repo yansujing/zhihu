@@ -1,11 +1,11 @@
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
-    <a class="navbar-brand" href="#">者也专栏</a>
+    <router-link class="navbar-brand" to="/">者也专栏</router-link>
     <ul class="list-inline mb-0" v-if="!userInfo.isLogin">
-      <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">登陆</a></li>
-      <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>
+      <li class="list-inline-item"><router-link to="/login" class="btn btn-outline-light my-2">登陆</router-link></li>
+      <li class="list-inline-item"><router-link to="/login" class="btn btn-outline-light my-2">注册</router-link></li>
     </ul>
-    <ul v-else class="list-inline mb-0">
+    <ul v-else class="list-inline mb-0 justify-content-between">
       <li class="list-inline-item">
         <DropDown :user-name="`你好 ${userInfo.name}`">
           <DropDownItem>
